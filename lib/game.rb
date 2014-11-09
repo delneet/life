@@ -1,8 +1,4 @@
-#! /usr/bin/env ruby
-
 require_relative 'game/square'
-require_relative 'game/square_alive'
-require_relative 'game/square_dead'
 
 require 'matrix'
 require 'curses'
@@ -31,30 +27,38 @@ module Game
     end
     
     def alive
-      rand(100) > 50
+      rand(100) > 80
     end
 
     def run
       while true do
         inspect_neighbours
         draw
-        sleep(0.1)
+        #sleep(0.1)
       end
     end
     
     def inspect_neighbours
-      @grid.each_with_index do |e, row, col|  
+      @grid.each do |square|  
         alive_neighbours = 0
-        (e.row-1..e.row+1).to_a.reject{|i| i<0 || i>@rows-1}.each do |grow|
-          (e.col-1..e.col+1).to_a.reject{|i| i<0 || i>@cols-1}.each do |gcol|
-            next if (e.row == grow && e.col == gcol)
-            alive_neighbours += 1 if @grid[grow, gcol].alive?
+        surrounding_rows(square).each do |row|
+          surrounding_cols(square).each do |col|
+            next if (square.row == row && square.col == col)
+            alive_neighbours += 1 if @grid[row, col].alive?
           end
         end
-        e.neighbours = alive_neighbours
+        square.neighbours = alive_neighbours
       end
     end
-        
+    
+    def surrounding_rows(square)
+      (square.row-1..square.row+1).to_a.reject{|i| i<0 || i>@rows-1}
+    end
+    
+    def surrounding_cols(square)
+      (square.col-1..square.col+1).to_a.reject{|i| i<0 || i>@cols-1}
+    end
+            
     def draw
       @grid.each do |s| 
         @win.setpos s.row, s.col
@@ -65,7 +69,3 @@ module Game
     
   end
 end
-
-game = Game::Game.new
-game.run
-

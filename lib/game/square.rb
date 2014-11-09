@@ -16,7 +16,7 @@ module Game
     
     def draw
       @alive = @alive ? [2,3].include?(neighbours) : neighbours == 3
-      @alive ? "\u25C6" : " "
+      @alive ? "o" : " "
     end
           
   end

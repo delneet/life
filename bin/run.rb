@@ -1,6 +1,6 @@
 #! /usr/bin/env ruby
 
-require '..lib/life'
+require_relative '../lib/game'
 
-game = Life.new(10)
+game = Game::Game.new
 game.run
