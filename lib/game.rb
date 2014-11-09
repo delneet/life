@@ -2,12 +2,10 @@ require_relative 'game/square'
 
 require 'matrix'
 require 'curses'
-Curses.noecho
-Curses.init_screen
-Curses.curs_set(0)
 
 module Game
   class Game
+    attr_reader :grid
   
     def initialize
       @rows = Curses.lines
