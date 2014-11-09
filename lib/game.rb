@@ -4,6 +4,7 @@ require_relative 'game/square'
 require_relative 'game/square_alive'
 require_relative 'game/square_dead'
 
+require 'matrix'
 require 'curses'
 Curses.noecho
 Curses.init_screen
@@ -16,39 +17,57 @@ module Game
     
     def initialize(size)
       @size  = size
-      @squares = []
+      @win = Curses::Window.new(0,0,0,0)
+      @grid = Matrix.build(@size){nil}
       seed
     end
     
     def seed    
-      size.times do |x|
-        size.times do |y|
-          s = square.new(x,y)
-          @squares << s
+      size.times do |row|
+        size.times do |col|
+          s = Square.new(row, col, alive)
+          puts "#{s.row},#{s.col}"
+          @grid.send :[]=, row, col, s
         end
       end        
     end
     
-    def square
-      rand(100) > 70 ? SquareAlive : SquareDead
+    def alive
+      rand(100) > 50
     end
 
     def run
       while true do
         inspect_neighbours
         draw
+        #sleep(1)
       end
     end
     
     def inspect_neighbours
-    
+      @grid.each_with_index do |e, row, col|  
+        alive_neighbours = 0
+        (e.row-1..e.row+1).to_a.reject{|i| i<0 || i>@size-1}.each do |grow|
+          (e.col-1..e.col+1).to_a.reject{|i| i<0 || i>@size-1}.each do |gcol|
+            next if (e.row == grow && e.col == gcol)
+            alive_neighbours += 1 if @grid[grow, gcol].alive?
+          end
+        end
+        e.neighbours = alive_neighbours
+      end
     end
-    
+        
     def draw
-    
+      @grid.each do |s| 
+        @win.setpos s.row, s.col
+        @win.addstr("#{s.draw}")
+      end
+      @win.refresh
     end
+    
   end
 end
 
-game = Game::Game.new(10)
+game = Game::Game.new(30)
 game.run
+

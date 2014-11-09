@@ -1,19 +1,23 @@
 module Game
   class Square
     attr_accessor   :neighbours
-    attr_reader     :x
-    attr_reader     :y
-    attr_reader     :alive
+    attr_reader     :row
+    attr_reader     :col
     
-    def initialize(x,y, alive = false)
-      @x = x
-      @y = y
+    def initialize(row, col, alive = false)
+      @row = row
+      @col = col
       @alive = alive
     end
     
-    def draw
-    
+    def alive?
+      @alive
     end
-      
+    
+    def draw
+      @alive = @alive ? [2,3].include?(neighbours) : neighbours == 3
+      @alive ? "\u25C6 " : "\u25C7 "
+    end
+          
   end
 end
