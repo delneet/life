@@ -2,5 +2,9 @@
 
 require_relative '../lib/game'
 
-game = Game::Game.new
-game.run
+g = Thread.new { 
+  game = Game::Game.new
+  game.run  
+}
+
+g.join

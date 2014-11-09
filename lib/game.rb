@@ -32,8 +32,9 @@ module Game
 
     def run
       while true do
-        inspect_neighbours
-        draw
+        x1 = Thread.new { inspect_neighbours }
+        x2 = Thread.new { draw }
+        [x1,x2].map(&:join)
         #sleep(0.1)
       end
     end

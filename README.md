@@ -7,6 +7,6 @@ First attempt to Conway's Game of Life in Ruby
 Simply run run.rb in the bin folder 
 
 ```
-./bin.run.rb
+./bin/run.rb
 ```
 
