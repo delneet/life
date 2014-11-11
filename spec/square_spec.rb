@@ -22,6 +22,10 @@ describe Game::Square do
     expect(square).to respond_to(:neighbours)
   end
   
+  it 'has a lifetime' do
+    expect(square).to respond_to(:lifetime)
+  end
+  
   context 'when alive' do
     let(:square) { Game::Square.new(0,0,true) }
     subject { :square }
@@ -58,6 +62,17 @@ describe Game::Square do
       square.draw
       expect(square).to be_alive
     end    
+    
+    context 'when older than 5' do
+      let(:square) { Game::Square.new(0,0,true) }
+      
+      it 'should draw x' do
+        square.neighbours = 3
+        square.lifetime = 6
+        expect(square.draw).to eq("x")
+      end
+      
+    end
   end
   
   context 'when dead' do
